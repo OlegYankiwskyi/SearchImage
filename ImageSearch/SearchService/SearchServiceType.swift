@@ -11,5 +11,5 @@ import UIKit
 
 protocol SearchServiceType {
     //TO DO: completion to typealias
-    func search(searchString: String, completion: (UIImage?, Error?) -> Void)
+    func search(searchString: String, completion: @escaping (UIImage?, Error?) -> Void)
 }

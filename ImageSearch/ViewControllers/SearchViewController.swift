@@ -14,9 +14,9 @@ class SearchImageViewController: UIViewController {
     private let viewModel: SearchImageViewModelType
     
     init(viewModel: SearchImageViewModelType = SearchImageViewModel()) {
-        super.init(nibName: "", bundle: nil)
-        
         self.viewModel = viewModel
+
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {

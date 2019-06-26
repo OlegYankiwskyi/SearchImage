@@ -39,7 +39,7 @@ class SearchImageViewModel: SearchImageViewModelType {
         self.searchService = searchService
     }
     
-    func search(inputedText: String, completion: (UIImage?, Error?) -> Void) {
+    func search(inputedText: String, completion: @escaping (UIImage?, Error?) -> Void) {
         if inputedText.isEmpty { completion(nil, SearchImageError.textEmpty) }
         
         self.searchService.search(searchString: inputedText) { image, error in
