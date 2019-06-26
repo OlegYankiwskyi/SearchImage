@@ -8,11 +8,11 @@
 
 import Foundation
 import UIKit
+import RealmSwift
 
 class SearchImageViewModel: SearchImageViewModelType {
     
     private let searchService: SearchServiceType
-    private var searchResults = Array<SearchImageResult>()
     
     init(searchService: SearchServiceType = FlickerSearchService()) {
         self.searchService = searchService
@@ -22,14 +22,15 @@ class SearchImageViewModel: SearchImageViewModelType {
         if inputedText.isEmpty { completion(SearchImageError.textEmpty) }
         
         self.searchService.search(searchString: inputedText) { [weak self] image, error in
-            guard let `self` = self else { return }
-            
+            guard let `self` = self else {
+                completion(.error)
+                return
+            }
             if let error = error {
                 completion(SearchImageError(error))
             }
             else if let image = image {
-                //TO DO: realm save
-                self.searchResults.append(SearchImageResult(image, text: inputedText))
+                self.save(image, text: inputedText)
                 completion(nil)
             }
             else {
@@ -39,11 +40,18 @@ class SearchImageViewModel: SearchImageViewModelType {
     }
     
     func countOfResults() -> Int {
-        return self.searchResults.count
+        return try! Realm().objects(SearchResult.self).count
     }
     
-    func getSearchResult(_ at: Int) -> SearchImageResult {
-        return self.searchResults[safe: at] ?? SearchImageResult()
+    func getSearchResult(_ at: Int) -> SearchResult {
+        return try! Realm().objects(SearchResult.self)[safe: at] ?? SearchResult()
+    }
+    
+    private func save(_ image: UIImage, text: String) {
+        let realm = try! Realm()
+        try! realm.write {
+            realm.add(SearchResult(image, text: text))
+        }
     }
 }
 

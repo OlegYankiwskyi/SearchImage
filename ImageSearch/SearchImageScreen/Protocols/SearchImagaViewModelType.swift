@@ -11,6 +11,6 @@ import UIKit
 
 protocol SearchImageViewModelType {
     func countOfResults() -> Int
-    func getSearchResult(_ at: Int) -> SearchImageResult
+    func getSearchResult(_ at: Int) -> SearchResult
     func search(inputedText: String, completion: @escaping (SearchImageError?) -> Void)
 }
