@@ -49,14 +49,12 @@ class FlickerSearchService: SearchServiceType {
                     completion(nil, SearchServiceError.parseJSON)
                     return
                 }
-                print("Result: \(parsedResult)")
                 
                 // Check for "photos" key in our result
                 guard let photosDictionary = parsedResult["photos"] as? [String:AnyObject] else {
                     completion(nil, SearchServiceError.parseJSON)
                     return
                 }
-                print("Result: \(photosDictionary)")
                 
                 /* GUARD: Is the "photo" key in photosDictionary? */
                 guard let photosArray = photosDictionary["photo"] as? [[String: AnyObject]] else {
@@ -97,8 +95,7 @@ class FlickerSearchService: SearchServiceType {
             if let error = error {
                 completion(nil, error)
             }
-            else if let data = data,
-                let image = UIImage(data: data) {
+            else if let data = data, let image = UIImage(data: data) {
                 completion(image, nil)
             }
         }

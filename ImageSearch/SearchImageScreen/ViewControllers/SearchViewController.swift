@@ -11,6 +11,7 @@ import UIKit
 class SearchImageViewController: UIViewController {
 
     private let searcBar = UISearchBar()
+    private let searchResultsTableView = UITableView()
     private let viewModel: SearchImageViewModelType
     
     init(viewModel: SearchImageViewModelType = SearchImageViewModel()) {
@@ -57,20 +58,18 @@ class SearchImageViewController: UIViewController {
     
     private func configureTableView() {
         
-        let tableView = UITableView()
-        self.view.addSubview(tableView)
+        self.view.addSubview(self.searchResultsTableView)
         
-        let leading = NSLayoutConstraint(item: tableView, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 0)
-        let trailing = NSLayoutConstraint(item: tableView, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: 0)
-        let top = NSLayoutConstraint(item: tableView, attribute: .top, relatedBy: .equal, toItem: self.searcBar, attribute: .bottom, multiplier: 1, constant: 0)
-        let bottom = NSLayoutConstraint(item: tableView, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottomMargin, multiplier: 1, constant: 0)
+        let leading = NSLayoutConstraint(item: self.searchResultsTableView, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1, constant: 0)
+        let trailing = NSLayoutConstraint(item: self.searchResultsTableView, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1, constant: 0)
+        let top = NSLayoutConstraint(item: self.searchResultsTableView, attribute: .top, relatedBy: .equal, toItem: self.searcBar, attribute: .bottom, multiplier: 1, constant: 0)
+        let bottom = NSLayoutConstraint(item: self.searchResultsTableView, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottomMargin, multiplier: 1, constant: 0)
         
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.searchResultsTableView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addConstraints([leading, trailing, top, bottom])
         
-        tableView.delegate = self
-        
-        //register cell "Cell"
+        self.searchResultsTableView.delegate = self
+        self.searchResultsTableView.dataSource = self
     }
     
     private func showAlert(title: String, message: String) {
@@ -86,10 +85,14 @@ extension SearchImageViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text else { return }
         
-        self.viewModel.search(inputedText: text) { image, error in
+        self.viewModel.search(inputedText: text) { [weak self] error in
+            guard let `self` = self else { return }
+            
             DispatchQueue.main.async {
                 if let error = error {
-                    
+                    self.showAlert(title: error.title, message: error.localizedDescription)
+                } else {
+                    self.searchResultsTableView.reloadData() //TO DO: insert
                 }
             }
         }
