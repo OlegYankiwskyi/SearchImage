@@ -98,7 +98,7 @@ extension SearchImageViewController: UISearchBarDelegate {
                 if let error = error {
                     self.showAlert(title: error.title, message: error.localizedDescription)
                 } else {
-                    self.searchResultsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                    self.searchResultsTableView.reloadData()
                 }
             }
         }
