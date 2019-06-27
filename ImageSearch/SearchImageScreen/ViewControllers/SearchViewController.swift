@@ -79,12 +79,7 @@ class SearchImageViewController: UIViewController {
         self.searchResultsTableView.dataSource = self
     }
     
-    private func showAlert(title: String, message: String) {
-        
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: .ok, style: .default))
-        self.present(alert, animated: true, completion: nil)
-    }
+
 }
 
 //MARK: UISearchBarDelegate
@@ -94,8 +89,10 @@ extension SearchImageViewController: UISearchBarDelegate {
         guard let text = searchBar.text else { return }
         self.hideKeyboard()
         
+        let hideSpinner = self.createSpinner()
         self.viewModel.search(inputedText: text) { [weak self] error in
             guard let `self` = self else { return }
+            hideSpinner()
             
             DispatchQueue.main.async {
                 if let error = error {
@@ -118,15 +115,19 @@ extension SearchImageViewController: UITableViewDelegate {
 
 //MARK: UITableViewDataSource
 extension SearchImageViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.viewModel.countOfResults()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let searchResult = self.viewModel.getSearchResult(indexPath.row)
-        let cell = UITableViewCell(style: .default, reuseIdentifier: UITableViewCell.defaultReuseIdentifier)
-        cell.imageView?.image = searchResult.image
-        cell.textLabel?.text = searchResult.text
+        let cell = SearchResultTableViewCell()
+        cell.searchResult = searchResult
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return SearchResultTableViewCell.height
     }
 }
