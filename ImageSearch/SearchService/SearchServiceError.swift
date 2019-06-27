@@ -9,7 +9,7 @@
 import Foundation
 
 enum SearchServiceError: Error {
-    case error
+    case unknown
     case noData
     case parseJSON
     case noPhotosFound

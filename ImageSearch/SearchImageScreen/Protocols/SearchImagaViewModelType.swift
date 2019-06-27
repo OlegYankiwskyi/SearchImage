@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol SearchImageViewModelType {
+protocol SearchImageModelType {
     func countOfResults() -> Int
     func getSearchResult(_ at: Int) -> SearchResult
     func search(inputedText: String, completion: @escaping (SearchImageError?) -> Void)

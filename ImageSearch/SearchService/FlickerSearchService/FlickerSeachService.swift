@@ -20,7 +20,6 @@ class FlickerSearchService: SearchServiceType {
     
     private func performSearch(_ searchURL: URL, _ completion: @escaping CompletionType) {
         
-        // Perform the request
         let session = URLSession.shared
         let request = URLRequest(url: searchURL)
         let task = session.dataTask(with: request) { (data, response, error) in
@@ -28,21 +27,18 @@ class FlickerSearchService: SearchServiceType {
                 completion(nil, error)
             }
             else {
-                // Check response code
                 let status = (response as! HTTPURLResponse).statusCode
                 if status != 200 {
-                    completion(nil, SearchServiceError.baseError)
+                    completion(nil, SearchServiceError.unknown)
                     return
                 }
                 
-                /* Check data returned? */
                 guard let data = data else {
                     completion(nil, SearchServiceError.noData)
                     return
                 }
                 
-                // Parse the data
-                let parsedResult: [String:AnyObject]!
+                let parsedResult: [String:AnyObject]
                 do {
                     parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
                 } catch {
@@ -50,34 +46,26 @@ class FlickerSearchService: SearchServiceType {
                     return
                 }
                 
-                // Check for "photos" key in our result
-                guard let photosDictionary = parsedResult["photos"] as? [String:AnyObject] else {
+                guard let photosDictionary = parsedResult[FlickerConstants.Keys.Photos] as? [String:AnyObject] else {
                     completion(nil, SearchServiceError.parseJSON)
                     return
                 }
-                
-                /* GUARD: Is the "photo" key in photosDictionary? */
-                guard let photosArray = photosDictionary["photo"] as? [[String: AnyObject]] else {
+
+                guard let photosArray = photosDictionary[FlickerConstants.Keys.Photo] as? [[String: AnyObject]] else {
                     completion(nil, SearchServiceError.parseJSON)
                     return
                 }
-                
-                // Check number of photos
-                if photosArray.count == 0 {
-                    completion(nil, SearchServiceError.noPhotosFound)
-                    return
-                } else {
-                    // Get the first image
-                    let photoDictionary = photosArray[0]// as [String: AnyObject]
-                    
-                    /* GUARD: Does our photo have a key for 'url_m'? */
-                    guard let imageUrlString = photoDictionary["url_m"] as? String else {
+
+                if let photoDictionary = photosArray.first {
+                    guard let imageUrlString = photoDictionary[FlickerConstants.Keys.ImageURL] as? String else {
                         completion(nil, SearchServiceError.parseJSON)
                         return
                     }
                     
-                    // Fetch the image
                     self.fetchImage(imageUrlString, completion)
+                } else {
+                    completion(nil, SearchServiceError.noPhotosFound)
+                    return
                 }
             }
         }
@@ -106,16 +94,13 @@ class FlickerSearchService: SearchServiceType {
     
     private func getUrl(searchString: String) -> URL {
         
-        // Build base URL
         var components = URLComponents()
         components.scheme = FlickerConstants.URLParams.APIScheme
         components.host = FlickerConstants.URLParams.APIHost
         components.path = FlickerConstants.URLParams.APIPath
         
-        // Build query string
         components.queryItems = [URLQueryItem]()
         
-        // Query components
         components.queryItems?.append(URLQueryItem(name: FlickerConstants.APIKeys.APIKey, value: FlickerConstants.APIValues.APIKey))
         components.queryItems?.append(URLQueryItem(name: FlickerConstants.APIKeys.SearchMethod, value: FlickerConstants.APIValues.SearchMethod))
         components.queryItems?.append(URLQueryItem(name: FlickerConstants.APIKeys.ResponseFormat, value: FlickerConstants.APIValues.ResponseFormat))

@@ -12,9 +12,9 @@ class SearchImageViewController: UIViewController {
 
     private let searcBar = UISearchBar()
     private let searchResultsTableView = UITableView()
-    private let viewModel: SearchImageViewModelType
+    private let viewModel: SearchImageModelType
     
-    init(viewModel: SearchImageViewModelType = SearchImageViewModel()) {
+    init(viewModel: SearchImageModelType = SearchImageModel()) {
         self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
@@ -80,8 +80,9 @@ class SearchImageViewController: UIViewController {
     }
     
     private func showAlert(title: String, message: String) {
+        
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default)) //TO DO: hardcode
+        alert.addAction(UIAlertAction(title: .ok, style: .default))
         self.present(alert, animated: true, completion: nil)
     }
 }
@@ -100,7 +101,7 @@ extension SearchImageViewController: UISearchBarDelegate {
                 if let error = error {
                     self.showAlert(title: error.title, message: error.localizedDescription)
                 } else {
-                    self.searchResultsTableView.insertRows(at: [IndexPath(row: self.viewModel.countOfResults() - 1, section: 0)], with: .automatic)
+                    self.searchResultsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
                 }
             }
         }
@@ -128,6 +129,4 @@ extension SearchImageViewController: UITableViewDataSource {
         cell.textLabel?.text = searchResult.text
         return cell
     }
-    
-    
 }

@@ -34,4 +34,10 @@ struct FlickerConstants {
         static let MediumURL = "url_m"
         static let SafeSearch = "1"
     }
+    
+    struct Keys {
+        static let Photos = "photos"
+        static let Photo = "photo"
+        static let ImageURL = "url_m"
+    }
 }

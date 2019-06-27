@@ -12,7 +12,7 @@ enum SearchImageError: Error {
     case textEmpty
     case imageNotFound
     case serverError
-    case error
+    case unknown
     
     var localizedDescription: String {
         switch self {
@@ -23,7 +23,7 @@ enum SearchImageError: Error {
             return "We can not find any image."
         case .serverError:
             return "Could you try later?"
-        case .error:
+        case .unknown:
             return "Something went wrong."
         }
     }
@@ -39,7 +39,7 @@ enum SearchImageError: Error {
             }
         }
         else {
-            self = .error
+            self = .unknown
         }
     }
 }
