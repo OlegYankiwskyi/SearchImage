@@ -12,6 +12,13 @@ import UIKit
 class FlickerSearchService: SearchServiceType {
     typealias CompletionType = (UIImage?, Error?) -> Void
     
+    private let networkService: NetworkService
+    
+    init(networkService: NetworkService = URLSessionNetworkService()) {
+        
+        self.networkService = networkService
+    }
+    
     func search(searchString: String, completion: @escaping CompletionType) {
         
         let searchURL = self.getUrl(searchString: searchString)
@@ -20,56 +27,46 @@ class FlickerSearchService: SearchServiceType {
     
     private func performSearch(_ searchURL: URL, _ completion: @escaping CompletionType) {
         
-        let session = URLSession.shared
-        let request = URLRequest(url: searchURL)
-        let task = session.dataTask(with: request) { (data, response, error) in
+        self.networkService.fetch(searchURL) { data, error in
             if let error = error {
                 completion(nil, error)
+                return
             }
-            else {
-                let status = (response as! HTTPURLResponse).statusCode
-                if status != 200 {
-                    completion(nil, SearchServiceError.unknown)
-                    return
-                }
-                
-                guard let data = data else {
-                    completion(nil, SearchServiceError.noData)
-                    return
-                }
-                
-                let parsedResult: [String:AnyObject]
-                do {
-                    parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
-                } catch {
+            guard let data = data else {
+                completion(nil, SearchServiceError.noData)
+                return
+            }
+            
+            let parsedResult: [String:AnyObject]
+            do {
+                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
+            } catch {
+                completion(nil, SearchServiceError.parseJSON)
+                return
+            }
+            
+            guard let photosDictionary = parsedResult[FlickerConstants.Keys.Photos] as? [String:AnyObject] else {
+                completion(nil, SearchServiceError.parseJSON)
+                return
+            }
+            
+            guard let photosArray = photosDictionary[FlickerConstants.Keys.Photo] as? [[String: AnyObject]] else {
+                completion(nil, SearchServiceError.parseJSON)
+                return
+            }
+            
+            if let photoDictionary = photosArray.first {
+                guard let imageUrlString = photoDictionary[FlickerConstants.Keys.ImageURL] as? String else {
                     completion(nil, SearchServiceError.parseJSON)
                     return
                 }
                 
-                guard let photosDictionary = parsedResult[FlickerConstants.Keys.Photos] as? [String:AnyObject] else {
-                    completion(nil, SearchServiceError.parseJSON)
-                    return
-                }
-
-                guard let photosArray = photosDictionary[FlickerConstants.Keys.Photo] as? [[String: AnyObject]] else {
-                    completion(nil, SearchServiceError.parseJSON)
-                    return
-                }
-
-                if let photoDictionary = photosArray.first {
-                    guard let imageUrlString = photoDictionary[FlickerConstants.Keys.ImageURL] as? String else {
-                        completion(nil, SearchServiceError.parseJSON)
-                        return
-                    }
-                    
-                    self.fetchImage(imageUrlString, completion)
-                } else {
-                    completion(nil, SearchServiceError.noPhotosFound)
-                    return
-                }
+                self.fetchImage(imageUrlString, completion)
+            } else {
+                completion(nil, SearchServiceError.noPhotosFound)
+                return
             }
         }
-        task.resume()
     }
     
     private func fetchImage(_ url: String, _ completion: @escaping CompletionType) {
@@ -79,16 +76,16 @@ class FlickerSearchService: SearchServiceType {
             return
         }
         
-        let task = URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
+        self.networkService.fetch(imageURL) { data, error in
             if let error = error {
                 completion(nil, error)
             }
-            else if let data = data, let image = UIImage(data: data) {
-                completion(image, nil)
+            guard let data = data, let image = UIImage(data: data) else {
+                completion(nil, SearchServiceError.noPhotosFound)
+                return
             }
+            completion(image, error)
         }
-        
-        task.resume()
     }
 
     

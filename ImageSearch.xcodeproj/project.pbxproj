@@ -28,6 +28,8 @@
 		3C61529F22C4CACE0046C739 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C61529E22C4CACE0046C739 /* UIViewController.swift */; };
 		3CC56F3522CA1A65001BA0D9 /* StorageServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC56F3422CA1A65001BA0D9 /* StorageServiceType.swift */; };
 		3CC56F3822CA1B25001BA0D9 /* RealmStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC56F3722CA1B25001BA0D9 /* RealmStorageService.swift */; };
+		3CC56F3C22CA1ED1001BA0D9 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC56F3B22CA1ED1001BA0D9 /* NetworkService.swift */; };
+		3CC56F3E22CA1F82001BA0D9 /* URLSessionNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC56F3D22CA1F82001BA0D9 /* URLSessionNetworkService.swift */; };
 		5DCFA231CD5F6D3736A9C8D3 /* Pods_ImageSearch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5D4A32D1C8177EE518BDCCD /* Pods_ImageSearch.framework */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +57,8 @@
 		3C61529E22C4CACE0046C739 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		3CC56F3422CA1A65001BA0D9 /* StorageServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageServiceType.swift; sourceTree = "<group>"; };
 		3CC56F3722CA1B25001BA0D9 /* RealmStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmStorageService.swift; sourceTree = "<group>"; };
+		3CC56F3B22CA1ED1001BA0D9 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		3CC56F3D22CA1F82001BA0D9 /* URLSessionNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionNetworkService.swift; sourceTree = "<group>"; };
 		429B117DC364E8767F6D017B /* Pods-ImageSearch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageSearch.debug.xcconfig"; path = "Target Support Files/Pods-ImageSearch/Pods-ImageSearch.debug.xcconfig"; sourceTree = "<group>"; };
 		C5D4A32D1C8177EE518BDCCD /* Pods_ImageSearch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageSearch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8BCD2A166F573E7FF41A8F5 /* Pods-ImageSearch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageSearch.release.xcconfig"; path = "Target Support Files/Pods-ImageSearch/Pods-ImageSearch.release.xcconfig"; sourceTree = "<group>"; };
@@ -93,9 +97,8 @@
 		3C61525322C28EB80046C739 /* ImageSearch */ = {
 			isa = PBXGroup;
 			children = (
-				3CC56F3322CA1A46001BA0D9 /* StorageService */,
 				3C61528022C38BCD0046C739 /* SearchImageScreen */,
-				3C61526622C36BA10046C739 /* SearchService */,
+				3CC56F3922CA1E4E001BA0D9 /* Services */,
 				3C61527622C37F710046C739 /* Extensions */,
 				3C61529B22C4CA1A0046C739 /* Views */,
 				3C61525422C28EB80046C739 /* AppDelegate.swift */,
@@ -113,7 +116,8 @@
 				3C61527B22C380610046C739 /* SearchServiceError.swift */,
 				3C61527D22C382410046C739 /* SearchServiceType.swift */,
 			);
-			path = SearchService;
+			name = SearchService;
+			path = ../SearchService;
 			sourceTree = "<group>";
 		};
 		3C61526C22C37A2B0046C739 /* ViewControllers */ = {
@@ -212,7 +216,27 @@
 				3CC56F3422CA1A65001BA0D9 /* StorageServiceType.swift */,
 				3CC56F3722CA1B25001BA0D9 /* RealmStorageService.swift */,
 			);
-			path = StorageService;
+			name = StorageService;
+			path = ../StorageService;
+			sourceTree = "<group>";
+		};
+		3CC56F3922CA1E4E001BA0D9 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				3CC56F3A22CA1EBA001BA0D9 /* NetworkServices */,
+				3C61526622C36BA10046C739 /* SearchService */,
+				3CC56F3322CA1A46001BA0D9 /* StorageService */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		3CC56F3A22CA1EBA001BA0D9 /* NetworkServices */ = {
+			isa = PBXGroup;
+			children = (
+				3CC56F3B22CA1ED1001BA0D9 /* NetworkService.swift */,
+				3CC56F3D22CA1F82001BA0D9 /* URLSessionNetworkService.swift */,
+			);
+			path = NetworkServices;
 			sourceTree = "<group>";
 		};
 		7C7F02118C8445332C81C8E6 /* Frameworks */ = {
@@ -356,12 +380,14 @@
 				3C61525522C28EB80046C739 /* AppDelegate.swift in Sources */,
 				3C61529F22C4CACE0046C739 /* UIViewController.swift in Sources */,
 				3CC56F3522CA1A65001BA0D9 /* StorageServiceType.swift in Sources */,
+				3CC56F3C22CA1ED1001BA0D9 /* NetworkService.swift in Sources */,
 				3CC56F3822CA1B25001BA0D9 /* RealmStorageService.swift in Sources */,
 				3C61527C22C380610046C739 /* SearchServiceError.swift in Sources */,
 				3C61527822C37F890046C739 /* String.swift in Sources */,
 				3C61526A22C36C830046C739 /* FlickerSeachService.swift in Sources */,
 				3C61529A22C4C75D0046C739 /* UIView.swift in Sources */,
 				3C61529822C4C2E70046C739 /* SearchResultTableViewCell.swift in Sources */,
+				3CC56F3E22CA1F82001BA0D9 /* URLSessionNetworkService.swift in Sources */,
 				3C61528222C38C190046C739 /* SearchImageError.swift in Sources */,
 				3C61528A22C38EDA0046C739 /* Error.swift in Sources */,
 				3C61526822C36C2A0046C739 /* FlickerConstants.swift in Sources */,
