@@ -11,8 +11,8 @@ import RealmSwift
 
 class RealmStorageService: StorageServiceType {
     
-    func getElementsM<T>() -> [T] {
-        return try! Realm().objects(T.entityType).map { $0 }
+    func getElements() -> [SearchResult] {
+        return try! Realm().objects(SearchResult.self).map { $0 }
     }
     
     func save(_ obj: SearchResult) {
