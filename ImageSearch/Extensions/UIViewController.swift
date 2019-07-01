@@ -19,13 +19,8 @@ extension UIViewController {
     }
     
     //The func returns block which hides the spinner
-    func createSpinner() -> (() -> Void) {
-        let child = SpinnerViewController()
-        
-        addChild(child)
-        child.view.frame = view.frame
-        view.addSubview(child.view)
-        child.didMove(toParent: self)
+    func showSpinner() -> (() -> Void) {
+        let child = SpinnerViewController(on: self)
         
         return {
             DispatchQueue.main.async {

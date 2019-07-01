@@ -10,5 +10,6 @@ import Foundation
 import UIKit
 
 protocol SearchServiceType {
+    
     func search(searchString: String, completion: @escaping (UIImage?, Error?) -> Void)
 }

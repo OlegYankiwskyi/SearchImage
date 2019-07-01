@@ -1,5 +1,5 @@
 //
-//  SearchImagaViewModelType.swift
+//  SearchImageModelType.swift
 //  ImageSearch
 //
 //  Created by OlegMac on 6/26/19.
@@ -10,7 +10,8 @@ import Foundation
 import UIKit
 
 protocol SearchImageModelType {
+    
     func countOfResults() -> Int
-    func getSearchResult(_ at: Int) -> SearchResult
+    func getSearchResult(_: Int) -> SearchResult
     func search(inputedText: String, completion: @escaping (SearchImageError?) -> Void)
 }

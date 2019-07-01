@@ -12,10 +12,10 @@ class SearchImageViewController: UIViewController {
 
     private let searcBar = UISearchBar()
     private let searchResultsTableView = UITableView()
-    private let viewModel: SearchImageModelType
+    private let model: SearchImageModelType
     
-    init(viewModel: SearchImageModelType = SearchImageModel()) {
-        self.viewModel = viewModel
+    init(model: SearchImageModelType = SearchImageModel()) {
+        self.model = model
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -40,6 +40,7 @@ class SearchImageViewController: UIViewController {
     }
     
     @objc private func hideKeyboard() {
+        
         self.view.endEditing(true)
     }
     
@@ -89,8 +90,8 @@ extension SearchImageViewController: UISearchBarDelegate {
         guard let text = searchBar.text else { return }
         self.hideKeyboard()
         
-        let hideSpinner = self.createSpinner()
-        self.viewModel.search(inputedText: text) { [weak self] error in
+        let hideSpinner = self.showSpinner()
+        self.model.search(inputedText: text) { [weak self] error in
             guard let `self` = self else { return }
             hideSpinner()
             
@@ -117,11 +118,11 @@ extension SearchImageViewController: UITableViewDelegate {
 extension SearchImageViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.countOfResults()
+        return self.model.countOfResults()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let searchResult = self.viewModel.getSearchResult(indexPath.row)
+        let searchResult = self.model.getSearchResult(indexPath.row)
         let cell = SearchResultTableViewCell()
         cell.searchResult = searchResult
         return cell

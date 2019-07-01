@@ -22,7 +22,7 @@ class SearchResult: Object {
     convenience init(_ image: UIImage, text: String) {
         self.init()
         
-        self.imageData = image.pngData() ?? Data()
+        self.imageData = image.pngData() ?? self.imageData
         self.text = text
     }
 }

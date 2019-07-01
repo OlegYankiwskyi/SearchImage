@@ -1,5 +1,5 @@
 //
-//  SearchViewModel.swift
+//  SearchImageModel.swift
 //  ImageSearch
 //
 //  Created by OlegMac on 6/26/19.
@@ -8,14 +8,16 @@
 
 import Foundation
 import UIKit
-import RealmSwift
 
 class SearchImageModel: SearchImageModelType {
     
     private let searchService: SearchServiceType
+    private let storageService: StorageServiceType
     
-    init(searchService: SearchServiceType = FlickerSearchService()) {
+    init(searchService: SearchServiceType = FlickerSearchService(), storageService: StorageServiceType = RealmStorageService()) {
+        
         self.searchService = searchService
+        self.storageService = storageService
     }
     
     func search(inputedText: String, completion: @escaping (SearchImageError?) -> Void) {
@@ -48,14 +50,11 @@ class SearchImageModel: SearchImageModelType {
     }
     
     private func getElements() -> [SearchResult] {
-        return try! Realm().objects(SearchResult.self).reversed()
+        return storageService.getElements().reversed()
     }
     
     private func save(_ image: UIImage, text: String) {
-        let realm = try! Realm()
-        try! realm.write {
-            realm.add(SearchResult(image, text: text))
-        }
+        self.storageService.save(SearchResult(image, text: text))
     }
 }
 

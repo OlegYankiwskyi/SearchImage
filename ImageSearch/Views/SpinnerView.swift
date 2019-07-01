@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class SpinnerViewController: UIViewController {
-    var spinner = UIActivityIndicatorView(style: .whiteLarge)
+    private var spinner = UIActivityIndicatorView(style: .whiteLarge)
     
     override func loadView() {
         view = UIView()
@@ -22,5 +22,18 @@ class SpinnerViewController: UIViewController {
         
         spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
+    
+    init(on baseVC: UIViewController) {
+        super.init(nibName: nil, bundle: nil)
+        
+        baseVC.addChild(self)
+        self.view.frame = baseVC.view.frame
+        baseVC.view.addSubview(self.view)
+        self.didMove(toParent: baseVC)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

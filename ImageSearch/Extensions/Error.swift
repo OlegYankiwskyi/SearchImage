@@ -9,6 +9,7 @@
 import Foundation
 
 extension Error {
+    
     var title: String {
         return "Error"
     }
